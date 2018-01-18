@@ -1,0 +1,26 @@
+resources:
+- name: flight-school
+  type: git
+  source:
+    uri: https://github.com/horacego/flight-school.git
+    branch: master
+
+- name: staging-app
+  type: cf
+  source:
+    api: https://api.stage1.eu-gb.bluemix.net
+    username: bmxsvt17@us.ibm.com
+    password: passw0rd
+    organization: bmxsvt17_org
+    space: dev
+
+jobs:
+- name: test-app
+  plan:
+  - get: flight-school
+    trigger: true
+  - task: tests
+    file: flight-school/build.yml
+  - put: staging-app
+    params:
+      manifest: flight-school/manifest.yml
